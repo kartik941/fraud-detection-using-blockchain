@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Fraud Detection System</title>
 
@@ -54,9 +55,17 @@
             font-weight: bold;
         }
 
-        .approved { color: #22c55e; }
-        .suspicious { color: #f59e0b; }
-        .fraud { color: #ef4444; }
+        .approved {
+            color: #22c55e;
+        }
+
+        .suspicious {
+            color: #f59e0b;
+        }
+
+        .fraud {
+            color: #ef4444;
+        }
 
         .badge {
             background: #334155;
@@ -79,103 +88,104 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<h2>🚀 Fraud Detection + Blockchain</h2>
+        <h2>🚀 Fraud Detection + Blockchain</h2>
 
-<div class="card">
-    <h3>Send Transaction</h3>
+        <div class="card">
+            <h3>Send Transaction</h3>
 
-    <input id="user" placeholder="User ID">
-    <input id="amount" placeholder="Amount">
-    <input id="ip" placeholder="IP Address">
+            <input id="user" placeholder="User ID">
+            <input id="amount" placeholder="Amount">
+            <input id="ip" placeholder="IP Address">
 
-    <button onclick="sendTransaction()">Analyze Transaction</button>
-</div>
+            <button onclick="sendTransaction()">Analyze Transaction</button>
+        </div>
 
-<div class="card" id="result" style="display:none;">
-    <h3>Result</h3>
+        <div class="card" id="result" style="display:none;">
+            <h3>Result</h3>
 
-    <div id="status" class="status"></div>
-    <div id="score" class="badge"></div>
+            <div id="status" class="status"></div>
+            <div id="score" class="badge"></div>
 
-    <h4>Reasons:</h4>
-    <ul id="reasons"></ul>
+            <h4>Reasons:</h4>
+            <ul id="reasons"></ul>
 
-    <h4>Blockchain:</h4>
-    <a id="txlink" target="_blank"></a>
-</div>
+            <h4>Blockchain:</h4>
+            <a id="txlink" target="_blank"></a>
+        </div>
 
-<div class="card">
-    <h3>Transaction History</h3>
-    <button onclick="loadTransactions()">Load History</button>
-    <ul id="history"></ul>
-</div>
+        <div class="card">
+            <h3>Transaction History</h3>
+            <button onclick="loadTransactions()">Load History</button>
+            <ul id="history"></ul>
+        </div>
 
-</div>
+    </div>
 
-<script>
+    <script>
 
-function getStatusClass(status) {
-    if (status === "APPROVED") return "approved";
-    if (status === "SUSPICIOUS") return "suspicious";
-    return "fraud";
-}
+        function getStatusClass(status) {
+            if (status === "APPROVED") return "approved";
+            if (status === "SUSPICIOUS") return "suspicious";
+            return "fraud";
+        }
 
-async function sendTransaction() {
-    const user = document.getElementById("user").value;
-    const amount = parseFloat(document.getElementById("amount").value);
-    const ip = document.getElementById("ip").value;
+        async function sendTransaction() {
+            const user = document.getElementById("user").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            const ip = document.getElementById("ip").value;
 
-    const res = await fetch("http://127.0.0.1:8000/transaction", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            user_id: user,
-            amount: amount,
-            ip_address: ip
-        })
-    });
+            const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: user,
+                    amount: amount,
+                    ip_address: ip
+                })
+            });
 
-    const data = await res.json();
+            const data = await res.json();
 
-    document.getElementById("result").style.display = "block";
+            document.getElementById("result").style.display = "block";
 
-    const statusEl = document.getElementById("status");
-    statusEl.innerText = data.status;
-    statusEl.className = "status " + getStatusClass(data.status);
+            const statusEl = document.getElementById("status");
+            statusEl.innerText = data.status;
+            statusEl.className = "status " + getStatusClass(data.status);
 
-    document.getElementById("score").innerText = "Risk Score: " + data.risk_score;
+            document.getElementById("score").innerText = "Risk Score: " + data.risk_score;
 
-    const reasonsList = document.getElementById("reasons");
-    reasonsList.innerHTML = "";
-    data.reasons.forEach(r => {
-        const li = document.createElement("li");
-        li.innerText = r;
-        reasonsList.appendChild(li);
-    });
+            const reasonsList = document.getElementById("reasons");
+            reasonsList.innerHTML = "";
+            data.reasons.forEach(r => {
+                const li = document.createElement("li");
+                li.innerText = r;
+                reasonsList.appendChild(li);
+            });
 
-    // 🔥 Etherscan link
-    const txLink = document.getElementById("txlink");
-    txLink.href = `https://sepolia.etherscan.io/tx/${data.blockchain_tx}`;
-    txLink.innerText = data.blockchain_tx;
-}
+            // 🔥 Etherscan link
+            const txLink = document.getElementById("txlink");
+            txLink.href = `https://sepolia.etherscan.io/tx/${data.blockchain_tx}`;
+            txLink.innerText = data.blockchain_tx;
+        }
 
-async function loadTransactions() {
-    const res = await fetch("http://127.0.0.1:8000/transactions");
-    const data = await res.json();
+        async function loadTransactions() {
+            const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transactions");
+            const data = await res.json();
 
-    const list = document.getElementById("history");
-    list.innerHTML = "";
+            const list = document.getElementById("history");
+            list.innerHTML = "";
 
-    data.forEach(tx => {
-        const li = document.createElement("li");
-        li.innerText = `${tx.user_id} | ₹${tx.amount} | ${tx.status}`;
-        list.appendChild(li);
-    });
-}
+            data.forEach(tx => {
+                const li = document.createElement("li");
+                li.innerText = `${tx.user_id} | ₹${tx.amount} | ${tx.status}`;
+                list.appendChild(li);
+            });
+        }
 
-</script>
+    </script>
 
 </body>
+
 </html>
