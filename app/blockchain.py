@@ -3,7 +3,7 @@ import json
 import dotenv
 import os
 dotenv.load_dotenv()
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   
 # Connect to local blockchain
 w3 = Web3(Web3.HTTPProvider(os.getenv("RPC_URL")))
 
@@ -11,7 +11,7 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("RPC_URL")))
 CONTRACT_ADDRESS = "0x2f9E9142f5A74C30ad7852c9F42a1eE7f0EB58aB"
 
 # Load ABI
-with open("artifacts/contracts/TransactionLogger.sol/TransactionLogger.json") as f:
+with open(os.path.join(os.path.dirname(__file__), "abi.json")) as f:
     contract_json = json.load(f)
     abi = contract_json["abi"]
 
