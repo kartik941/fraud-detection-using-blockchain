@@ -5,7 +5,7 @@ import os
 dotenv.load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))   
 # Connect to local blockchain
-w3 = Web3(Web3.HTTPProvider(os.getenv("RPC_URL")))
+w3 = Web3(Web3.HTTPProvider(os.getenv("rpc_url")))
 
 # Replace this
 CONTRACT_ADDRESS = "0x2f9E9142f5A74C30ad7852c9F42a1eE7f0EB58aB"
