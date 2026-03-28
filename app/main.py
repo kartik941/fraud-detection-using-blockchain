@@ -8,6 +8,7 @@ from .fraud_engine import calculate_risk
 from .blockchain import log_to_blockchain
 from .email_service import send_fraud_alert
 from .utils import generate_tx_hash
+from .verification import verify_transaction_integrity
 
 # -------------------------------
 # Create DB tables
@@ -120,6 +121,11 @@ def create_transaction(txn: schemas.TransactionCreate, db: Session = Depends(get
 def get_all_transactions(db: Session = Depends(get_db)):
     return crud.get_transactions(db)
 
+
+
+@app.get("/verify/{tx_id}")
+def verify(tx_id: int, db: Session = Depends(get_db)):
+    return verify_transaction_integrity(db, tx_id)
 
 # -------------------------------
 # ❤️ Health Check

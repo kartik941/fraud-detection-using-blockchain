@@ -1,190 +1,251 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-    <title>Fraud Detection System</title>
+    <title>BlockGuard</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
-            padding: 20px;
-        }
 
-        h2 {
-            text-align: center;
-        }
+<style>
+    body {
+        font-family: Arial;
+        background: #0f172a;
+        color: white;
+        padding: 20px;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-        }
+    h2 {
+        text-align: center;
+    }
 
-        .card {
-            background: #1e293b;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-        }
+    .card {
+        background: #1e293b;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 12px;
+        transition: 0.2s ease;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(59,130,246,0.4);
+    }
 
-        button:hover {
-            background: #2563eb;
-        }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+    }
 
-        .status {
-            font-size: 22px;
-            font-weight: bold;
-        }
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .approved {
-            color: #22c55e;
-        }
+    button:hover {
+        background: #2563eb;
+    }
 
-        .suspicious {
-            color: #f59e0b;
-        }
+    .status {
+        font-size: 22px;
+        font-weight: bold;
+    }
 
-        .fraud {
-            color: #ef4444;
-        }
+    .approved {
+        color: #22c55e;
+    }
 
-        .badge {
-            background: #334155;
-            padding: 6px 10px;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 10px;
-        }
+    .suspicious {
+        color: #f59e0b;
+    }
 
-        a {
-            color: #60a5fa;
-            word-break: break-all;
-        }
+    .fraud {
+        color: #ef4444;
+    }
 
-        ul {
-            padding-left: 20px;
-        }
-    </style>
+    .badge {
+        background: #334155;
+        padding: 6px 10px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .hash-box {
+        background: #020617;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        word-break: break-all;
+        margin-top: 10px;
+        border: 1px solid #334155;
+    }
+
+    a {
+        color: #60a5fa;
+        word-break: break-all;
+    }
+
+    ul {
+        padding-left: 20px;
+    }
+</style>
+
+
 </head>
 
 <body>
 
-    <div class="container">
 
-        <h2>🚀 Fraud Detection + Blockchain</h2>
+<div class="container">
 
-        <div class="card">
-            <h3>Send Transaction</h3>
+    <h2>🚀 BlockGuard - Blockchain Fraud Detection</h2>
 
-            <input id="user" placeholder="User ID">
-            <input id="amount" placeholder="Amount">
-            <input id="ip" placeholder="IP Address">
+    <!-- INPUT -->
+    <div class="card">
+        <h3>Send Transaction</h3>
 
-            <button onclick="sendTransaction()">Analyze Transaction</button>
-        </div>
+        <input id="user" placeholder="User ID">
+        <input id="amount" placeholder="Amount">
+        <input id="ip" placeholder="IP Address">
 
-        <div class="card" id="result" style="display:none;">
-            <h3>Result</h3>
-
-            <div id="status" class="status"></div>
-            <div id="score" class="badge"></div>
-
-            <h4>Reasons:</h4>
-            <ul id="reasons"></ul>
-
-            <h4>Blockchain:</h4>
-            <a id="txlink" target="_blank"></a>
-        </div>
-
-        <div class="card">
-            <h3>Transaction History</h3>
-            <button onclick="loadTransactions()">Load History</button>
-            <ul id="history"></ul>
-        </div>
-
+        <button onclick="sendTransaction()">Analyze Transaction</button>
     </div>
 
-    <script>
+    <!-- RESULT -->
+    <div class="card" id="result" style="display:none;">
+        <h3>Latest Result</h3>
 
-        function getStatusClass(status) {
-            if (status === "APPROVED") return "approved";
-            if (status === "SUSPICIOUS") return "suspicious";
-            return "fraud";
-        }
+        <div id="status" class="status"></div>
+        <div id="score" class="badge"></div>
 
-        async function sendTransaction() {
-            const user = document.getElementById("user").value;
-            const amount = parseFloat(document.getElementById("amount").value);
-            const ip = document.getElementById("ip").value;
+        <h4>Reasons:</h4>
+        <ul id="reasons"></ul>
 
-            const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transaction", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: user,
-                    amount: amount,
-                    ip_address: ip
-                })
-            });
+        <h4>Blockchain:</h4>
+        <a id="txlink" target="_blank"></a>
 
-            const data = await res.json();
+        <h4>Data Hash:</h4>
+        <div id="hash" class="hash-box"></div>
+    </div>
 
-            document.getElementById("result").style.display = "block";
+    <!-- HISTORY -->
+    <div class="card">
+        <h3>Transaction History</h3>
+        <button onclick="loadTransactions()">Load History</button>
+        <div id="history"></div>
+    </div>
 
-            const statusEl = document.getElementById("status");
-            statusEl.innerText = data.status;
-            statusEl.className = "status " + getStatusClass(data.status);
+</div>
 
-            document.getElementById("score").innerText = "Risk Score: " + data.risk_score;
+<script>
 
-            const reasonsList = document.getElementById("reasons");
-            reasonsList.innerHTML = "";
-            data.reasons.forEach(r => {
-                const li = document.createElement("li");
-                li.innerText = r;
-                reasonsList.appendChild(li);
-            });
+    function getStatusClass(status) {
+        if (status === "APPROVED") return "approved";
+        if (status === "SUSPICIOUS") return "suspicious";
+        return "fraud";
+    }
 
-            // 🔥 Etherscan link
-            const txLink = document.getElementById("txlink");
-            txLink.href = `https://sepolia.etherscan.io/tx/${data.blockchain_tx}`;
-            txLink.innerText = data.blockchain_tx;
-        }
+    function getStatusIcon(status) {
+        if (status === "APPROVED") return "✅";
+        if (status === "SUSPICIOUS") return "⚠️";
+        return "🚨";
+    }
 
-        async function loadTransactions() {
-            const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transactions");
-            const data = await res.json();
+    async function sendTransaction() {
+        const user = document.getElementById("user").value;
+        const amount = parseFloat(document.getElementById("amount").value);
+        const ip = document.getElementById("ip").value;
 
-            const list = document.getElementById("history");
-            list.innerHTML = "";
+        const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transaction", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: user,
+                amount: amount,
+                ip_address: ip
+            })
+        });
 
-            data.forEach(tx => {
-                const li = document.createElement("li");
-                li.innerText = `${tx.user_id} | ₹${tx.amount} | ${tx.status}`;
-                list.appendChild(li);
-            });
-        }
+        const data = await res.json();
 
-    </script>
+        document.getElementById("result").style.display = "block";
+
+        const statusEl = document.getElementById("status");
+        statusEl.innerText = getStatusIcon(data.status) + " " + data.status;
+        statusEl.className = "status " + getStatusClass(data.status);
+
+        document.getElementById("score").innerText = "Risk Score: " + data.risk_score;
+
+        const reasonsList = document.getElementById("reasons");
+        reasonsList.innerHTML = "";
+        data.reasons.forEach(r => {
+            const li = document.createElement("li");
+            li.innerText = r;
+            reasonsList.appendChild(li);
+        });
+
+        const txLink = document.getElementById("txlink");
+        txLink.href = `https://sepolia.etherscan.io/tx/${data.blockchain_tx}`;
+        txLink.innerText = data.blockchain_tx;
+
+        // 🔥 SHOW HASH
+        document.getElementById("hash").innerText = data.data_hash;
+    }
+
+    async function loadTransactions() {
+        const res = await fetch("https://fraud-detection-using-blockchain.onrender.com/transactions");
+        const data = await res.json();
+
+        const container = document.getElementById("history");
+        container.innerHTML = "";
+
+        data.reverse().forEach(tx => {
+            const div = document.createElement("div");
+            div.className = "card";
+
+            div.innerHTML = `
+                <div class="status ${getStatusClass(tx.status)}">
+                    ${getStatusIcon(tx.status)} ${tx.status}
+                </div>
+
+                <div class="badge">₹ ${tx.amount}</div>
+
+                <p><strong>User:</strong> ${tx.user_id}</p>
+                <p><strong>Risk Score:</strong> ${tx.risk_score}</p>
+
+                <p><strong>Reasons:</strong></p>
+                <ul>
+                    ${(tx.reasons || []).map(r => `<li>${r}</li>`).join("")}
+                </ul>
+
+                <p><strong>Blockchain:</strong></p>
+                <a href="https://sepolia.etherscan.io/tx/${tx.blockchain_tx}" target="_blank">
+                    View Transaction 🔗
+                </a>
+
+                <p><strong>Data Hash:</strong></p>
+                <div class="hash-box">${tx.data_hash}</div>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+</script>
+```
 
 </body>
 

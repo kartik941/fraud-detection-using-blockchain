@@ -16,6 +16,7 @@ class TransactionDB(BaseModel):
     amount: float
     status: str
     risk_score: float
+    data_hash: str
 
     class Config:
         orm_mode = True
